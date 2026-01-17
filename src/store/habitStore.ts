@@ -19,6 +19,7 @@ interface HabitState {
   addCheckIn: (checkIn: CheckIn) => void;
   deleteCheckIn: (id: string) => void;
   updateCheckInMood: (id: string, mood: 1 | 2 | 3 | 4 | 5) => void;
+  updateCheckInNote: (id: string, note: string) => void;
 
   // Streak actions
   updateStreak: (habitId: string, streak: Streak) => void;
@@ -111,6 +112,13 @@ export const useHabitStore = create<HabitState>()(
         set((state) => ({
           checkIns: state.checkIns.map((c) =>
             c.id === id ? { ...c, mood } : c
+          ),
+        })),
+
+      updateCheckInNote: (id, note) =>
+        set((state) => ({
+          checkIns: state.checkIns.map((c) =>
+            c.id === id ? { ...c, note } : c
           ),
         })),
 

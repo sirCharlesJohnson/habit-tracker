@@ -2,3 +2,4 @@
 export * from './habit.types';
 export * from './journal.types';
 export * from './ai.types';
+export * from './achievement.types';

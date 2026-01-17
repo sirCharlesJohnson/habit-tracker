@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Filter } from 'lucide-react';
+import { Plus, Filter, LayoutTemplate, Archive } from 'lucide-react';
 import { useHabitStore, useUIStore } from '../store';
 import type { HabitCategory } from '../types';
 import { HABIT_CATEGORIES } from '../utils/constants';
@@ -7,11 +7,17 @@ import HabitCard from '../components/habits/HabitCard';
 import Button from '../components/common/Button';
 import Modal from '../components/common/Modal';
 import HabitForm from '../components/habits/HabitForm';
+import HabitTemplates from '../components/habits/HabitTemplates';
+import ArchivedHabits from '../components/habits/ArchivedHabits';
 
 export default function Habits() {
-  const { getActiveHabits, calculateStreaks, getHabitById } = useHabitStore();
+  const { getActiveHabits, calculateStreaks, getHabitById, habits } = useHabitStore();
   const { isHabitModalOpen, editingHabitId, openHabitModal, closeHabitModal } = useUIStore();
   const [filterCategory, setFilterCategory] = useState<HabitCategory | 'all'>('all');
+  const [isTemplatesOpen, setIsTemplatesOpen] = useState(false);
+  const [isArchivedOpen, setIsArchivedOpen] = useState(false);
+
+  const archivedCount = habits.filter((h) => h.archived).length;
 
   const allHabits = getActiveHabits();
   const filteredHabits =
@@ -37,10 +43,22 @@ export default function Habits() {
               Manage your habits and track your progress
             </p>
           </div>
-          <Button onClick={() => openHabitModal()}>
-            <Plus size={18} className="mr-2" />
-            New Habit
-          </Button>
+          <div className="flex gap-2">
+            {archivedCount > 0 && (
+              <Button variant="secondary" onClick={() => setIsArchivedOpen(true)}>
+                <Archive size={18} className="mr-2" />
+                Archived ({archivedCount})
+              </Button>
+            )}
+            <Button variant="secondary" onClick={() => setIsTemplatesOpen(true)}>
+              <LayoutTemplate size={18} className="mr-2" />
+              Templates
+            </Button>
+            <Button onClick={() => openHabitModal()}>
+              <Plus size={18} className="mr-2" />
+              New Habit
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
@@ -119,6 +137,26 @@ export default function Habits() {
         size="lg"
       >
         <HabitForm habit={editingHabit} onClose={closeHabitModal} />
+      </Modal>
+
+      {/* Templates Modal */}
+      <Modal
+        isOpen={isTemplatesOpen}
+        onClose={() => setIsTemplatesOpen(false)}
+        title="Habit Templates"
+        size="lg"
+      >
+        <HabitTemplates onSelect={() => setIsTemplatesOpen(false)} />
+      </Modal>
+
+      {/* Archived Habits Modal */}
+      <Modal
+        isOpen={isArchivedOpen}
+        onClose={() => setIsArchivedOpen(false)}
+        title="Archived Habits"
+        size="lg"
+      >
+        <ArchivedHabits />
       </Modal>
     </div>
   );

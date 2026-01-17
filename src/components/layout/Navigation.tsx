@@ -1,11 +1,12 @@
 import { NavLink } from 'react-router-dom';
-import { Home, ListTodo, BookOpen, BarChart3, Sparkles } from 'lucide-react';
+import { Home, ListTodo, BookOpen, BarChart3, Trophy, Sparkles } from 'lucide-react';
 
 const navItems = [
   { to: '/', label: 'Today', icon: Home },
   { to: '/habits', label: 'Habits', icon: ListTodo },
   { to: '/journal', label: 'Journal', icon: BookOpen },
   { to: '/stats', label: 'Stats', icon: BarChart3 },
+  { to: '/achievements', label: 'Badges', icon: Trophy },
   { to: '/coaching', label: 'Coaching', icon: Sparkles },
 ];
 

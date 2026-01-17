@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, MessageSquare, ChevronDown } from 'lucide-react';
 import type { Habit } from '../../types';
 import { useHabitStore } from '../../store';
 import { getTodayString } from '../../utils/dateUtils';
@@ -17,14 +17,17 @@ interface HabitCheckInProps {
 }
 
 export default function HabitCheckIn({ habit }: HabitCheckInProps) {
-  const { toggleCheckIn, getCheckInForDate, getStreakByHabitId, updateCheckInMood } = useHabitStore();
+  const { toggleCheckIn, getCheckInForDate, getStreakByHabitId, updateCheckInMood, updateCheckInNote } = useHabitStore();
   const [showCelebration, setShowCelebration] = useState(false);
   const [showMoodPicker, setShowMoodPicker] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
+  const [noteText, setNoteText] = useState('');
   const today = getTodayString();
 
   const checkIn = getCheckInForDate(habit.id, today);
   const isChecked = checkIn?.completed || false;
   const currentMood = checkIn?.mood;
+  const currentNote = checkIn?.note || '';
   const streak = getStreakByHabitId(habit.id);
 
   const handleToggle = () => {
@@ -54,6 +57,18 @@ export default function HabitCheckIn({ habit }: HabitCheckInProps) {
       updateCheckInMood(checkIn.id, mood);
     }
     setShowMoodPicker(false);
+  };
+
+  const handleOpenNotes = () => {
+    setNoteText(currentNote);
+    setShowNotes(true);
+  };
+
+  const handleSaveNote = () => {
+    if (checkIn) {
+      updateCheckInNote(checkIn.id, noteText.trim());
+    }
+    setShowNotes(false);
   };
 
   return (
@@ -120,6 +135,61 @@ export default function HabitCheckIn({ habit }: HabitCheckInProps) {
                 <span>{CHECKIN_MOODS.find(m => m.value === currentMood)?.emoji}</span>
                 <span>{CHECKIN_MOODS.find(m => m.value === currentMood)?.label}</span>
               </button>
+            </div>
+          )}
+
+          {/* Notes Section */}
+          {isChecked && (
+            <div className="ml-11 mt-3">
+              <AnimatePresence mode="wait">
+                {showNotes ? (
+                  <motion.div
+                    key="notes-editor"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <textarea
+                      value={noteText}
+                      onChange={(e) => setNoteText(e.target.value)}
+                      placeholder="Add a note about today's check-in..."
+                      className="w-full p-2 text-sm border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      rows={2}
+                    />
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={handleSaveNote}
+                        className="px-3 py-1 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => setShowNotes(false)}
+                        className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.button
+                    key="notes-button"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    onClick={handleOpenNotes}
+                    className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                  >
+                    <MessageSquare size={14} />
+                    {currentNote ? (
+                      <span className="truncate max-w-[200px]">{currentNote}</span>
+                    ) : (
+                      <span>Add note</span>
+                    )}
+                    {currentNote && <ChevronDown size={14} />}
+                  </motion.button>
+                )}
+              </AnimatePresence>
             </div>
           )}
 

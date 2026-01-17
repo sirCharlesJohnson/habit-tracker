@@ -4,6 +4,7 @@ import { format, subDays } from 'date-fns';
 import { useHabitStore, useJournalStore } from '../store';
 import CompletionChart from '../components/stats/CompletionChart';
 import StreakCalendar from '../components/stats/StreakCalendar';
+import WeeklySummary from '../components/stats/WeeklySummary';
 import Card from '../components/common/Card';
 
 export default function Stats() {
@@ -167,6 +168,12 @@ export default function Stats() {
             </div>
           </div>
         </Card>
+      </div>
+
+      {/* Weekly Summary */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <WeeklySummary weekOffset={0} />
+        <WeeklySummary weekOffset={-1} />
       </div>
 
       {/* Charts Section */}
