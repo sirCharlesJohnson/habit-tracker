@@ -154,7 +154,7 @@ export default function HabitCheckIn({ habit }: HabitCheckInProps) {
                       value={noteText}
                       onChange={(e) => setNoteText(e.target.value)}
                       placeholder="Add a note about today's check-in..."
-                      className="w-full p-2 text-sm border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full p-2 text-sm border border-gray-200 rounded-lg bg-white text-gray-900 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       rows={2}
                     />
                     <div className="flex gap-2 mt-2">
