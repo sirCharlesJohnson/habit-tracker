@@ -10,8 +10,8 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
-            <Brain className="w-8 h-8 text-primary-600" />
-            <span className="text-xl font-bold text-gray-900">Habit Tracker</span>
+            <Brain className="w-7 h-7 sm:w-8 sm:h-8 text-primary-600" />
+            <span className="text-lg sm:text-xl font-bold text-gray-900">Habit Tracker</span>
           </Link>
 
           {/* Dark Mode Toggle */}
